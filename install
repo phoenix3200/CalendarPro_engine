@@ -1,0 +1,64 @@
+#! /bin/csh -f
+set orig = "obj/cpengine.dylib"
+set name = "cpengine.dylib"
+set repo = "~/Sites/Build/ssp/"
+set loc = "/Library/MobileSubstrate/DynamicLibraries/"
+
+#cd build/Debug-iphoneos/${orig}.app
+
+if ( ( $1 == "repo" ) || ( $2 == "repo" ) || ( $3 == "repo" ) || ( $4 == "repo" ) )then
+	echo "Copying to repo"
+	cp $orig ${repo}/${loc}
+endif
+
+if ( ($1 == "ipad" ) || ( $2 == "ipad") || ( $3 == "ipad") || ( $4 == "ipad") ) then
+	set ip = $ipad
+	echo Installing $name
+	rsync -t $orig -ve ssh ${ip}:${loc}/$name
+    echo Killing Calendar
+    ssh $ip killall MobileCal
+endif
+
+
+if ( ($1 == "ip32" ) || ( $2 == "ip32") || ( $3 == "ip32") || ( $4 == "ip32") ) then
+        set ip = $ip32
+        echo Installing $name
+        rsync -t $orig -ve ssh ${ip}:${loc}/$name
+        echo Killing Calendar
+        ssh $ip killall MobileCal
+endif
+
+
+if ( ($1 == "ip16" ) || ( $2 == "ip16") || ( $3 == "ip16") || ( $4 == "ip16") ) then
+        set ip = $ip16
+        echo Installing $name
+        rsync -t $orig -ve ssh ${ip}:${loc}/$name
+        echo Killing Calendar
+        ssh $ip killall MobileCal
+endif
+
+if ( ($1 == "ip4" ) || ( $2 == "ip4") || ( $3 == "ip4") || ( $4 == "ip4") ) then
+        set ip = $ip4
+        echo Installing $name
+        rsync -t $orig -ve ssh ${ip}:${loc}/$name
+        echo Killing Calendar
+        ssh $ip killall MobileCal
+endif
+
+if ( ($1 == "idev" ) || ( $2 == "idev") || ( $3 == "idev") || ( $4 == "idev") ) then
+        set ip = root@localhost
+		set port = 2222
+        #echo "Deleting old version..."
+        #ssh -p $port $ip rm -f ${loc}/$name
+        echo Installing $name
+        #scp -r -P $port $orig ${ip}:${loc}/$name
+        rsync -t $orig -ve "ssh -p $port" ${ip}:${loc}/$name 
+	echo Killing SpringBoard
+        ssh -p $port $ip killall SpringBoard
+	echo Killing mediaserverd
+        ssh -p $port $ip killall mediaserverd
+endif
+
+
+echo "Done..."
+
